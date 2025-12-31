@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Content Security Policy: protegge da XSS e iniezioni -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'">
+    <title>Wordle - Indovina la Parola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .game-board {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .letter-box.correct {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+            transform: scale(1.05);
+        }
+
+        .letter-box.present {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .letter-box.absent {
+            background: #e5e7eb;
+            color: #999;
+            border-color: #e5e7eb;
+            transform: scale(1.05);
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        input:focus {
+            outline: 2px solid #764ba2;
+            outline-offset: 2px;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus visibile per accessibilità da tastiera */
+        button:focus {
+            outline: 2px solid #333;
+            outline-offset: 2px;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        .btn-reset {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .info-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .attempts {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 25px;
+            margin-bottom: 10px;
+        }
+
+        .message.success {
+            color: #10b981;
+        }
+
+        .message.error {
+            color: #ef4444;
+        }
+
+        .message.info {
+            color: #3b82f6;
+        }
+
+        .keyboard-info {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+
+        .key-legend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .key-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .key-box.correct {
+            background: #10b981;
+            color: white;
+        }
+
+        .key-box.present {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .key-box.absent {
+            background: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WORDLE</h1>
+        <p class="subtitle">Indovina la parola in 6 tentativi!</p>
+
+        <div class="info-section">
+            <div class="attempts" aria-live="polite" aria-atomic="true">
+                Tentativi rimasti: <span id="attempts">6</span>
+            </div>
+            <div class="message" id="message" aria-live="assertive" aria-atomic="true" role="status"></div>
+        </div>
+
+        <div class="game-board" id="gameBoard" aria-label="Griglia del gioco Wordle"></div>
+
+        <div class="input-section">
+            <label for="guessInput" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                Inserisci la tua parola:
+            </label>
+            <input 
+                type="text" 
+                id="guessInput" 
+                placeholder="Scrivi una parola..." 
+                maxlength="7" 
+                autocomplete="off"
+                aria-label="Campo di input per inserire la tua indovinazione"
+                aria-describedby="input-help">
+            <small id="input-help" style="display: block; margin-top: 4px; color: #666;">
+                Inserisci una parola e premi Invio o clicca il pulsante Invia
+            </small>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-submit" id="submitBtn" aria-label="Invia la tua indovinazione">INVIA</button>
+            <button class="btn-reset" id="resetBtn" aria-label="Inizia una nuova partita">NUOVA PARTITA</button>
+        </div>
+
+        <div class="keyboard-info">
+            <div class="key-legend">
+                <div class="key-box correct">✓</div>
+                <span>Posizione corretta</span>
+            </div>
+            <div class="key-legend">
+                <div class="key-box present">~</div>
+                <span>Nella parola</span>
+            </div>
+            <div class="key-legend">
+                <div class="key-box absent">✗</div>
+                <span>Non nella parola</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SICUREZZA: Nessun segreto, API key, token o password nel codice
+        
+        const WORDS = [
+            'TAVOLA', 'TORTA', 'BANANA', 'ARANCIA', 'FRAGOLA', 'LIMONE', 'MELE', 'PERA',
+            'CASA', 'PIRLA', 'GATTO', 'CIBO', 'SOLE', 'LUNA', 'STELLA', 'FIORE', 'ALBERO',
+            'LIBRO', 'ACQUA', 'FUOCO', 'VENTO', 'PIANTA', 'ANIMALE', 'COLORE', 'MUSICA',
+            'DANZA', 'CAVALLO', 'FARFALLA', 'MONTAGNA', 'FIUME', 'MARE', 'CIELO', 'NUVOLA',
+            'PIOGGIA', 'NEVE', 'TEMPESTA', 'ARCOBALENO', 'FINESTRA', 'PORTA', 'TAVOLO', 'SEDIA',
+            'COMPUTER', 'TELEFONO', 'TELEVISORE', 'RADIO', 'GIORNALE', 'MATITA', 'CARTA', 'PENNA',
+            'SCUOLA', 'CASTELLO', 'PONTE', 'STRADA', 'STAZIONE', 'TRENO', 'MACCHINA', 'BICICLETTA',
+            'AEREO', 'NAVE', 'BARCO', 'ZATTERA', 'PALLONE', 'PALLONE', 'CALCIO', 'TENNIS',
+            'BASKET', 'NUOTO', 'CORSA', 'SALTO', 'CICLISMO', 'KAYAK', 'VELA', 'CANOA'
+        ];
+
+        let secretWord = '';
+        let attempts = 6;
+        let guesses = [];
+        let gameOver = false;
+
+        /**
+         * Sanitizza input utente: normalizza, rimuove caratteri non validi, limita lunghezza
+         * Protegge da XSS (iniezione di script)
+         */
+        function sanitizeInput(input) {
+            if (typeof input !== 'string') return '';
+            
+            // Normalizza a maiuscole, rimuove spazi, limita a 7 caratteri
+            return input
+                .toUpperCase()
+                .trim()
+                .slice(0, 7)
+                .replace(/[^A-ZÀÈÉÌÒÙ]/g, ''); // Solo lettere italiane
+        }
+
+        function initGame() {
+            secretWord = WORDS[Math.floor(Math.random() * WORDS.length)]; 
+            attempts = 6;
+            guesses = [];
+            gameOver = false;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').className = 'message';
+            document.getElementById('attempts').textContent = attempts;
+            document.getElementById('submitBtn').disabled = false;
+            drawBoard();
+            
+            // Focus sull'input per miglior UX
+            document.getElementById('guessInput').focus();
+        }
+
+        function drawBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+
+                const wordLength = secretWord.length;
+                for (let j = 0; j < wordLength; j++) {
+                    const box = document.createElement('div');
+                    box.className = 'letter-box';
+
+                    if (i < guesses.length) {
+                        const letter = guesses[i][j];
+                        // Usa textContent per evitare XSS
+                        box.textContent = letter;
+
+                        if (secretWord[j] === letter) {
+                            box.classList.add('correct');
+                            box.setAttribute('aria-label', `${letter} - Posizione corretta`);
+                        } else if (secretWord.includes(letter)) {
+                            box.classList.add('present');
+                            box.setAttribute('aria-label', `${letter} - Nella parola`);
+                        } else {
+                            box.classList.add('absent');
+                            box.setAttribute('aria-label', `${letter} - Non nella parola`);
+                        }
+                    }
+
+                    row.appendChild(box);
+                }
+
+                board.appendChild(row);
+            }
+        }
+
+        /**
+         * Valida l'indovinazione
+         */
+        function checkGuess(guess) {
+            // Validazione della lunghezza
+            if (guess.length !== secretWord.length) {
+                showMessage(`La parola deve avere ${secretWord.length} lettere!`, 'error');
+                return false;
+            }
+
+            // Validazione: solo lettere italiane
+            if (!/^[A-ZÀÈÉÌÒÙ]+$/.test(guess)) {
+                showMessage('Usa solo lettere!', 'error');
+                return false;
+            }
+
+            guesses.push(guess);
+            attempts--;
+            return true;
+        }
+
+        /**
+         * Mostra messaggio: usa textContent per evitare XSS
+         */
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            // SICUREZZA: textContent al posto di innerHTML per evitare XSS
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+        }
+
+        /**
+         * Gestisce l'invio dell'indovinazione
+         */
+        function submitGuess() {
+            if (gameOver) return;
+
+            const input = document.getElementById('guessInput');
+            const guess = sanitizeInput(input.value); // Sanitizza input
+
+            if (!guess) {
+                showMessage('Inserisci una parola!', 'error');
+                return;
+            }
+
+            if (!checkGuess(guess)) {
+                return;
+            }
+
+            input.value = '';
+            drawBoard();
+
+            if (guess === secretWord) {
+                showMessage(`🎉 Hai vinto! La parola era: ${secretWord}`, 'success');
+                gameOver = true;
+                document.getElementById('submitBtn').disabled = true;
+            } else if (attempts === 0) {
+                showMessage(`😢 Game Over! La parola era: ${secretWord}`, 'error');
+                gameOver = true;
+                document.getElementById('submitBtn').disabled = true;
+            } else {
+                document.getElementById('attempts').textContent = attempts;
+            }
+        }
+
+        // Event listeners con accesso tramite ID (niente eval, niente onclick inline)
+        document.getElementById('submitBtn').addEventListener('click', submitGuess);
+        document.getElementById('guessInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitGuess();
+            }
+        });
+        document.getElementById('resetBtn').addEventListener('click', initGame);
+
+        // Inizializza il gioco quando il DOM è carico
+        initGame();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
