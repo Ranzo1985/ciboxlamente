@@ -77,14 +77,15 @@
 
 .key-legend {
     display: flex;
+
 .game-board {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 30px;
-    width: 100%;
-    max-width: 100vw;
     align-items: center;
+    width: auto;
+    max-width: 100vw;
     box-sizing: border-box;
 }
 
