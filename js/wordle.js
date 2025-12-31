@@ -65,6 +65,7 @@ function initGame() {
 
 /**
  * Disegna la griglia del gioco
+ * Logica corretta per gestire lettere ripetute
  */
 function drawBoard() {
     const board = document.getElementById('gameBoard');
@@ -77,19 +78,57 @@ function drawBoard() {
         row.className = 'row';
 
         const wordLength = secretWord.length;
+        
+        // Per ogni riga indovinata, calcola i colori correttamente
+        const rowColors = [];
+        if (i < guesses.length) {
+            const guess = guesses[i];
+            
+            // Crea array per tracciare le lettere usate nella parola segreta
+            const secretLetters = secretWord.split('');
+            
+            // PRIMO PASS: marcca tutte le lettere corrette
+            for (let j = 0; j < wordLength; j++) {
+                if (guess[j] === secretWord[j]) {
+                    rowColors[j] = 'correct';
+                    // Marca come usata nella parola segreta
+                    secretLetters[j] = null;
+                } else {
+                    rowColors[j] = null; // da decidere dopo
+                }
+            }
+            
+            // SECONDO PASS: marcca le lettere presenti (ma non nella posizione giusta)
+            for (let j = 0; j < wordLength; j++) {
+                if (rowColors[j] === null) { // non è corretta
+                    const letterIndex = secretLetters.indexOf(guess[j]);
+                    if (letterIndex !== -1) {
+                        // La lettera è nella parola, ma in posizione sbagliata
+                        rowColors[j] = 'present';
+                        // Marca come usata
+                        secretLetters[letterIndex] = null;
+                    } else {
+                        // La lettera non è nella parola
+                        rowColors[j] = 'absent';
+                    }
+                }
+            }
+        }
+        
+        // Disegna i box
         for (let j = 0; j < wordLength; j++) {
             const box = document.createElement('div');
             box.className = 'letter-box';
 
             if (i < guesses.length) {
                 const letter = guesses[i][j];
-                // Usa textContent per evitare XSS
                 box.textContent = letter;
 
-                if (secretWord[j] === letter) {
+                const color = rowColors[j];
+                if (color === 'correct') {
                     box.classList.add('correct');
                     box.setAttribute('aria-label', `${letter} - Posizione corretta`);
-                } else if (secretWord.includes(letter)) {
+                } else if (color === 'present') {
                     box.classList.add('present');
                     box.setAttribute('aria-label', `${letter} - Nella parola`);
                 } else {
