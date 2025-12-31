@@ -5,130 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Content Security Policy: protegge da XSS e iniezioni -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Menu - CiboxMente</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            padding: 20px;
-            animation: slideInDown 0.6s ease;
-        }
-
-        .container {
-            background: white;
-            border-radius: 16px;
-            padding: 50px 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            animation: slideInDown 0.8s ease;
-        }
-
-        h1 {
-            text-align: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-            font-size: 3.2em;
-            font-weight: 800;
-            letter-spacing: 2px;
-            animation: bounce 1.2s ease;
-        }
-
-        .subtitle {
-            color: #888;
-            font-size: 1.1em;
-            margin-bottom: 40px;
-            font-weight: 500;
-            animation: slideInDown 0.8s ease 0.1s both;
-        }
-
-        .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            animation: slideInDown 0.8s ease 0.2s both;
-        }
-
-        .menu-button {
-            display: inline-block;
-            padding: 16px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            margin: 0;
-            border: 2px solid transparent;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-        }
-
-        /* Focus visibile per accessibilità */
-        .menu-button:focus {
-            outline: 2px solid #333;
-            outline-offset: 2px;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
-        }
-
-        .menu-button:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .menu-button:active {
-            transform: translateY(1px);
-        }
-    </style>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <div class="container">
         <h1>CiboxMente</h1>
         <p class="subtitle">Scegli un gioco</p>
         <div class="menu-buttons">
-            <a href="wordle.html?v=2" class="menu-button" aria-label="Gioca a Wordle">🎮 Wordle</a>
+            <a href="wordle_new.html" class="menu-button" aria-label="Gioca a Wordle">🎮 Wordle</a>
         </div>
     </div>
 </body>
