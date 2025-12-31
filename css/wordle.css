@@ -11,11 +11,14 @@
     gap: 10px;
     justify-content: center;
     animation: slideInDown 0.5s ease;
+    flex-wrap: wrap;
 }
 
 .letter-box {
     width: 55px;
     height: 55px;
+    min-width: 45px;
+    min-height: 45px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     display: flex;
@@ -27,6 +30,7 @@
     background: white;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 .letter-box.correct {
@@ -106,4 +110,65 @@
     background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
     color: #999;
     border: 1px solid #d1d5db;
+}
+
+/* ====== RESPONSIVE MOBILE ====== */
+@media (max-width: 480px) {
+    .letter-box {
+        width: 45px;
+        height: 45px;
+        min-width: 40px;
+        min-height: 40px;
+        font-size: 18px;
+        border: 1.5px solid #e0e0e0;
+    }
+
+    .row {
+        gap: 6px;
+    }
+
+    .game-board {
+        gap: 6px;
+    }
+
+    .keyboard-info {
+        gap: 12px;
+        margin-top: 20px;
+        font-size: 11px;
+    }
+
+    .key-box {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .letter-box {
+        width: 40px;
+        height: 40px;
+        min-width: 35px;
+        min-height: 35px;
+        font-size: 16px;
+    }
+
+    .row {
+        gap: 5px;
+    }
+
+    .game-board {
+        gap: 5px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
 }
