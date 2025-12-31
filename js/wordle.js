@@ -66,6 +66,7 @@ function initGame() {
 /**
  * Disegna la griglia del gioco
  * Logica corretta per gestire lettere ripetute
+ * Conta le occorrenze disponibili per ogni lettera
  */
 function drawBoard() {
     const board = document.getElementById('gameBoard');
@@ -78,37 +79,43 @@ function drawBoard() {
         row.className = 'row';
 
         const wordLength = secretWord.length;
+        const rowColors = [];
         
         // Per ogni riga indovinata, calcola i colori correttamente
-        const rowColors = [];
         if (i < guesses.length) {
             const guess = guesses[i];
             
-            // Crea array per tracciare le lettere usate nella parola segreta
-            const secretLetters = secretWord.split('');
+            // PRIMO PASS: marcca tutte le lettere corrette (VERDE)
+            const guessLetterCount = {};
+            const secretLetterCount = {};
             
-            // PRIMO PASS: marcca tutte le lettere corrette
+            // Conta le lettere nella parola segreta
+            for (let k = 0; k < wordLength; k++) {
+                const letter = secretWord[k];
+                secretLetterCount[letter] = (secretLetterCount[letter] || 0) + 1;
+            }
+            
+            // Identifica le posizioni corrette
             for (let j = 0; j < wordLength; j++) {
                 if (guess[j] === secretWord[j]) {
                     rowColors[j] = 'correct';
-                    // Marca come usata nella parola segreta
-                    secretLetters[j] = null;
+                    // Decrementa il conteggio disponibile per questa lettera
+                    secretLetterCount[guess[j]]--;
                 } else {
                     rowColors[j] = null; // da decidere dopo
                 }
             }
             
-            // SECONDO PASS: marcca le lettere presenti (ma non nella posizione giusta)
+            // SECONDO PASS: marcca le lettere presenti (ARANCIO)
             for (let j = 0; j < wordLength; j++) {
                 if (rowColors[j] === null) { // non è corretta
-                    const letterIndex = secretLetters.indexOf(guess[j]);
-                    if (letterIndex !== -1) {
-                        // La lettera è nella parola, ma in posizione sbagliata
+                    if (secretLetterCount[guess[j]] > 0) {
+                        // La lettera è nella parola e rimane disponibile
                         rowColors[j] = 'present';
-                        // Marca come usata
-                        secretLetters[letterIndex] = null;
+                        // Decrementa il conteggio disponibile
+                        secretLetterCount[guess[j]]--;
                     } else {
-                        // La lettera non è nella parola
+                        // La lettera non è disponibile
                         rowColors[j] = 'absent';
                     }
                 }
