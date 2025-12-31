@@ -1,0 +1,109 @@
+/* ====== GAME BOARD ====== */
+.game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    animation: slideInDown 0.5s ease;
+}
+
+.letter-box {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.letter-box.correct {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #059669;
+    transform: scale(1.08) rotateY(360deg);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4);
+    animation: flip 0.6s ease;
+}
+
+.letter-box.present {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #d97706;
+    transform: scale(1.08) rotateX(360deg);
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4);
+    animation: flip 0.6s ease 0.1s both;
+}
+
+.letter-box.absent {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #999;
+    border-color: #d1d5db;
+    transform: scale(0.95);
+    opacity: 0.8;
+    animation: flip 0.6s ease 0.2s both;
+}
+
+/* ====== INPUT SECTION ====== */
+.input-section {
+    margin-bottom: 25px;
+}
+
+/* ====== KEYBOARD INFO ====== */
+.keyboard-info {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 28px;
+    font-size: 13px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.key-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: slideInDown 0.6s ease;
+}
+
+.key-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.key-box.correct {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.key-box.present {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.key-box.absent {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #999;
+    border: 1px solid #d1d5db;
+}
