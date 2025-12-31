@@ -481,6 +481,9 @@
                             box.classList.add('absent');
                             box.setAttribute('aria-label', `${letter} - Non nella parola`);
                         }
+                    } else {
+                        // Quadratino vuoto per righe non ancora usate
+                        box.setAttribute('aria-label', `Quadratino vuoto`);
                     }
 
                     row.appendChild(box);
