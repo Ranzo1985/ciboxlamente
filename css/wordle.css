@@ -1,24 +1,22 @@
 /* ====== GAME BOARD ====== */
-.game-board {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
     animation: slideInDown 0.5s ease;
-    flex-wrap: wrap;
+    width: 100%;
 }
 
 .letter-box {
     width: 55px;
     height: 55px;
-    min-width: 45px;
-    min-height: 45px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     display: flex;
@@ -31,6 +29,93 @@
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+}
+
+.letter-box.correct {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #059669;
+    transform: scale(1.08) rotateY(360deg);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4);
+    animation: flip 0.6s ease;
+}
+
+.letter-box.present {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #d97706;
+    transform: scale(1.08) rotateX(360deg);
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4);
+    animation: flip 0.6s ease 0.1s both;
+}
+
+.letter-box.absent {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #999;
+    border-color: #d1d5db;
+    transform: scale(0.95);
+    opacity: 0.8;
+    animation: flip 0.6s ease 0.2s both;
+}
+
+/* ====== INPUT SECTION ====== */
+.input-section {
+    margin-bottom: 25px;
+}
+
+/* ====== KEYBOARD INFO ====== */
+.keyboard-info {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 28px;
+    font-size: 13px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.key-legend {
+    display: flex;
+.game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 100vw;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    animation: slideInDown 0.5s ease;
+    width: auto;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+.letter-box {
+    width: 55px;
+    height: 55px;
+    min-width: 40px;
+    min-height: 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .letter-box.correct {
@@ -113,7 +198,6 @@
 }
 
 /* ====== RESPONSIVE MOBILE ====== */
-@media (max-width: 480px) {
     .letter-box {
         width: 45px;
         height: 45px;
@@ -170,5 +254,60 @@
     button {
         padding: 10px;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px !important;
+        max-width: 100vw !important;
+    }
+    .game-board {
+        gap: 5px;
+        margin-bottom: 18px;
+        max-width: 100vw;
+    }
+    .row {
+        gap: 5px;
+        max-width: 100vw;
+    }
+    .letter-box {
+        width: 38px;
+        height: 38px;
+        min-width: 30px;
+        min-height: 30px;
+        font-size: 15px;
+        border-width: 1.2px;
+    }
+    .keyboard-info {
+        gap: 8px;
+        margin-top: 12px;
+        font-size: 10px;
+    }
+    .key-box {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 400px) {
+    .letter-box {
+        width: 28px;
+        height: 28px;
+        min-width: 22px;
+        min-height: 22px;
+        font-size: 11px;
+    }
+    .row {
+        gap: 3px;
+    }
+    .game-board {
+        gap: 3px;
+        margin-bottom: 10px;
+    }
+    input, button {
+        padding: 7px;
+        font-size: 11px;
     }
 }
